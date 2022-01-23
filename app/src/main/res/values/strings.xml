@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RecyclerView1</string>
+    <string name="move_up">move up</string>
+    <string name="move_down">move down</string>
+    <string name="remove">remove</string>
+
+</resources>
