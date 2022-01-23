@@ -6,4 +6,8 @@
 
     <string name="fire">Fire</string>
     <string name="unemployed">[Unemployed]</string>
+    <string name="failed_to_load_users">Failed to load users</string>
+    <string name="try_again">try again</string>
+    <string name="no_users">no users</string>
+    <string name="user_has_benn_deleted">User has benn deleted</string>
 </resources>
