@@ -22,7 +22,6 @@ class UserDetailsViewModel(
         }catch (e: UserNotFoundException){
             e.printStackTrace()
         }
-
     }
 
     fun deleteUser(){

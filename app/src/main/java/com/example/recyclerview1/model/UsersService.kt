@@ -1,6 +1,7 @@
 package com.example.recyclerview1.model
 
 import com.example.recyclerview1.UserNotFoundException
+import com.example.recyclerview1.tasks.Task
 import com.github.javafaker.Faker
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,11 +25,11 @@ class UsersService {
         ) }.toMutableList()
     }
 
-    fun getUsers(): List<User>{
+    fun loadUsers(): Task<Unit>{
         return users
     }
 
-    fun getById(id: Long): UserDetails{
+    fun getById(id: Long): Task<UserDetails> {
         val user = users.firstOrNull { it.id == id } ?: throw UserNotFoundException()
         return UserDetails(
             user = user,
@@ -36,7 +37,7 @@ class UsersService {
         )
     }
 
-    fun deleteUser(user: User){
+    fun deleteUser(user: User): Task<Unit>{
         val indexToDelete = users.indexOfFirst { it.id == user.id }
         if (indexToDelete != -1){
             users = ArrayList(users)
@@ -45,7 +46,7 @@ class UsersService {
         }
     }
 
-    fun moveUser(user: User, moveBy: Int){
+    fun moveUser(user: User, moveBy: Int): Task<Unit>{
         val oldIndex = users.indexOfFirst { it.id == user.id }
         if (oldIndex == -1) return
         val newIndex = oldIndex + moveBy
