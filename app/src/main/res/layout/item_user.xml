@@ -58,10 +58,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="imgvPhoto, tvCompany"/>
+        app:constraint_referenced_ids="imgvPhoto, tvCompany" />
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="6dp"
         app:layout_constraintTop_toBottomOf="@id/barrier" />
+
+    <ProgressBar
+        android:id="@+id/pbItem"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/imgvMore"
+        app:layout_constraintEnd_toEndOf="@+id/imgvMore"
+        app:layout_constraintStart_toStartOf="@+id/imgvMore"
+        app:layout_constraintTop_toTopOf="@+id/imgvMore" />
 </androidx.constraintlayout.widget.ConstraintLayout>
