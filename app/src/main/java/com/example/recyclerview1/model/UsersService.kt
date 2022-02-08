@@ -55,6 +55,11 @@ class UsersService {
         notifyChanges()
     }
 
+    fun swapUsers(startPos: Int, endPos: Int){
+        Collections.swap(users, startPos, endPos)
+        notifyChanges()
+    }
+
     fun fireUser(user: User){
         val index = users.indexOfFirst { it.id == user.id }
         if (index == -1) return
