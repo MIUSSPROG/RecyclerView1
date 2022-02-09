@@ -1,6 +1,6 @@
 package com.example.recyclerview1
 
-import com.example.recyclerview1.model.User
+import com.example.recyclerview1.model.DataModel.User
 
 interface Navigator {
 

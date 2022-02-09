@@ -10,10 +10,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.recyclerview1.adapter.UserActionListener
-import com.example.recyclerview1.adapter.UsersAdapter
 import com.example.recyclerview1.databinding.ActivityMainBinding
 import com.example.recyclerview1.fragments.UserDetailsFragment
-import com.example.recyclerview1.model.User
+import com.example.recyclerview1.model.DataModel.User
 import com.example.recyclerview1.model.UsersListener
 import com.example.recyclerview1.model.UsersService
 

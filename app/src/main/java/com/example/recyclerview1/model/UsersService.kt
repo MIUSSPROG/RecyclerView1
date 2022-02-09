@@ -4,74 +4,120 @@ import com.example.recyclerview1.UserNotFoundException
 import com.github.javafaker.Faker
 import java.util.*
 import kotlin.collections.ArrayList
+import com.example.recyclerview1.model.DataModel.User
+import com.example.recyclerview1.model.DataModel.Student
+import kotlin.random.Random
 
-typealias UsersListener = (users: List<User>) -> Unit
+typealias UsersListener = (users: List<DataModel>) -> Unit
 
 class UsersService {
 
-    private var users = mutableListOf<User>()
+    private var data = mutableListOf<DataModel>()
 
     private val listeners = mutableSetOf<UsersListener>()
 
     init {
         val faker = Faker.instance()
         IMAGES.shuffle()
-        users = (1..100).map { User(
-            id = it.toLong(),
-            name = faker.name().name(),
-            company = faker.company().name(),
-            photo = IMAGES[it% IMAGES.size]
-        ) }.toMutableList()
+        data = (0..50).map {
+            if (it % 2 == 0) {
+                User(
+                    id = it.toLong(),
+                    name = faker.name().name(),
+                    company = faker.company().name(),
+                    photo = IMAGES[it % IMAGES.size]
+                )
+            }
+            else{
+                Student(
+                    id = it.toLong(),
+                    university = faker.university().name(),
+                    grade = Random.nextInt(7),
+                    photo = faker.company().logo()
+                )
+            }
+
+        }.toMutableList()
     }
 
-    fun getUsers(): List<User>{
-        return users
+    fun getUsers(): List<DataModel>{
+        return data
     }
 
-    fun getById(id: Long): UserDetails{
-        val user = users.firstOrNull { it.id == id } ?: throw UserNotFoundException()
-        return UserDetails(
-            user = user,
-            details = Faker.instance().lorem().paragraphs(3).joinToString("\n\n")
-        )
-    }
+//    fun getById(id: Long): UserDetails{
+//        val user = data.firstOrNull { it.id == id } ?: throw UserNotFoundException()
+//        return UserDetails(
+//            user = user,
+//            details = Faker.instance().lorem().paragraphs(3).joinToString("\n\n")
+//        )
+//    }
 
-    fun deleteUser(user: User){
-        val indexToDelete = users.indexOfFirst { it.id == user.id }
-        if (indexToDelete != -1){
-            users = ArrayList(users)
-            users.removeAt(indexToDelete)
-            notifyChanges()
+    fun deleteItem(item: DataModel){
+        when(item){
+            is User ->{
+                var users = data as MutableList<User>
+                val indexToDelete = users.indexOfFirst { it.id == item.id }
+                if (indexToDelete != -1){
+                    users = ArrayList(users)
+                    users.removeAt(indexToDelete)
+                    notifyChanges()
+                }
+            }
+            is Student -> {
+                var students = data as MutableList<Student>
+                val indexToDelete = students.indexOfFirst { it.id == item.id }
+                if (indexToDelete != -1){
+                    students = ArrayList(students)
+                    students.removeAt(indexToDelete)
+                    notifyChanges()
+                }
+            }
         }
+
+
     }
 
-    fun moveUser(user: User, moveBy: Int){
-        val oldIndex = users.indexOfFirst { it.id == user.id }
-        if (oldIndex == -1) return
-        val newIndex = oldIndex + moveBy
-        if (newIndex < 0 || newIndex >= users.size) return
-        users = ArrayList(users)
-        Collections.swap(users, oldIndex, newIndex)
+    fun moveItem(item: DataModel, moveBy: Int){
+        when(item){
+            is User ->{
+                var users = data as MutableList<User>
+                val oldIndex = users.indexOfFirst { it.id == item.id }
+                if (oldIndex == -1) return
+                val newIndex = oldIndex + moveBy
+                if (newIndex < 0 || newIndex >= users.size) return
+                users = ArrayList(users)
+                Collections.swap(users, oldIndex, newIndex)
+            }
+            is Student -> {
+                var students = data as MutableList<Student>
+                val oldIndex = students.indexOfFirst { it.id == item.id }
+                if (oldIndex == -1) return
+                val newIndex = oldIndex + moveBy
+                if (newIndex < 0 || newIndex >= students.size) return
+                students = ArrayList(students)
+                Collections.swap(students, oldIndex, newIndex)
+            }
+        }
         notifyChanges()
     }
 
-    fun swapUsers(startPos: Int, endPos: Int){
-        Collections.swap(users, startPos, endPos)
+    fun swapItems(startPos: Int, endPos: Int){
+        Collections.swap(data, startPos, endPos)
         notifyChanges()
     }
 
-    fun fireUser(user: User){
-        val index = users.indexOfFirst { it.id == user.id }
-        if (index == -1) return
-        val updatedUser = users[index].copy(company = "")
-        users = ArrayList(users)
-        users[index] = updatedUser
-        notifyChanges()
-    }
+//    fun fireUser(user: User){
+//        val index = data.indexOfFirst { it.id == user.id }
+//        if (index == -1) return
+//        val updatedUser = users[index].copy(company = "")
+//        users = ArrayList(users)
+//        users[index] = updatedUser
+//        notifyChanges()
+//    }
 
     fun addListener(listener: UsersListener){
         listeners.add(listener)
-        listener.invoke(users)
+        listener.invoke(data)
     }
 
     fun removeListener(listener: UsersListener){
@@ -79,7 +125,7 @@ class UsersService {
     }
 
     private fun notifyChanges(){
-        listeners.forEach{ it.invoke(users) }
+        listeners.forEach{ it.invoke(data) }
     }
 
     companion object {

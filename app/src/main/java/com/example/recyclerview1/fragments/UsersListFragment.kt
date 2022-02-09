@@ -11,17 +11,18 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerview1.R
+import com.example.recyclerview1.adapter.MultipleViewAdapter
 import com.example.recyclerview1.adapter.UserActionListener
-import com.example.recyclerview1.adapter.UsersAdapter
 import com.example.recyclerview1.databinding.FragmentUsersListBinding
-import com.example.recyclerview1.model.User
+import com.example.recyclerview1.model.DataModel.User
 import com.example.recyclerview1.utils.factory
 import com.example.recyclerview1.utils.navigator
 
 class UsersListFragment : Fragment(R.layout.fragment_users_list) {
 
     private lateinit var binding: FragmentUsersListBinding
-    private lateinit var adapter: UsersAdapter
+//    private lateinit var adapter: UsersAdapter
+    private lateinit var adapter: MultipleViewAdapter
 
     private val viewModel: UsersListViewModel by viewModels { factory() }
 
@@ -31,13 +32,13 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentUsersListBinding.inflate(inflater, container, false)
-        adapter = UsersAdapter(object : UserActionListener {
+        adapter = MultipleViewAdapter(object : UserActionListener {
             override fun onUserMove(user: User, moveBy: Int) {
-                viewModel.moveUser(user, moveBy)
+                viewModel.moveItem(user, moveBy)
             }
 
             override fun onUserDelete(user: User) {
-                viewModel.deleteUser(user)
+                viewModel.deleteItem(user)
             }
 
             override fun onUserDetails(user: User) {
@@ -45,13 +46,13 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
             }
 
             override fun onUserFire(user: User) {
-
+                viewModel.fireItem(user)
             }
 
         })
 
         viewModel.users.observe(viewLifecycleOwner, Observer {
-            adapter.users = it
+            adapter.adapterData = it
         })
 
         binding.recyclerView.adapter = adapter
@@ -73,15 +74,15 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
             ): Boolean {
                 val startPos = source.adapterPosition
                 val endPos = target.adapterPosition
-                viewModel.swapUsers(startPos, endPos)
+                viewModel.swapItems(startPos, endPos)
                 recyclerView.adapter?.notifyItemMoved(startPos, endPos)
                 return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val userToDelete = adapter.users[viewHolder.adapterPosition]
-                viewModel.deleteUser(userToDelete)
-                Toast.makeText(requireActivity(), "User ${userToDelete.name} has been deleted", Toast.LENGTH_SHORT).show()
+                val itemToDelete = adapter.adapterData[viewHolder.adapterPosition] as User
+                viewModel.deleteItem(itemToDelete)
+                Toast.makeText(requireActivity(), "User ${itemToDelete.name} has been deleted", Toast.LENGTH_SHORT).show()
             }
 
 
