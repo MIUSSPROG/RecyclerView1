@@ -7,6 +7,7 @@ import kotlin.collections.ArrayList
 import com.example.recyclerview1.model.DataModel.User
 import com.example.recyclerview1.model.DataModel.Student
 import kotlin.random.Random
+import kotlin.reflect.typeOf
 
 typealias UsersListener = (users: List<DataModel>) -> Unit
 
@@ -55,20 +56,20 @@ class UsersService {
     fun deleteItem(item: DataModel){
         when(item){
             is User ->{
-                var users = data as MutableList<User>
+                var users = data.filterIsInstance<User>()
                 val indexToDelete = users.indexOfFirst { it.id == item.id }
                 if (indexToDelete != -1){
-                    users = ArrayList(users)
-                    users.removeAt(indexToDelete)
+                    data = ArrayList(data)
+                    data.removeAt(indexToDelete)
                     notifyChanges()
                 }
             }
             is Student -> {
-                var students = data as MutableList<Student>
+                var students = data.filterIsInstance<Student>()
                 val indexToDelete = students.indexOfFirst { it.id == item.id }
                 if (indexToDelete != -1){
-                    students = ArrayList(students)
-                    students.removeAt(indexToDelete)
+                    data = ArrayList(data)
+                    data.removeAt(indexToDelete)
                     notifyChanges()
                 }
             }
@@ -86,7 +87,7 @@ class UsersService {
                 val newIndex = oldIndex + moveBy
                 if (newIndex < 0 || newIndex >= users.size) return
                 users = ArrayList(users)
-                Collections.swap(users, oldIndex, newIndex)
+                Collections.swap(data, oldIndex, newIndex)
             }
             is Student -> {
                 var students = data as MutableList<Student>
@@ -95,7 +96,7 @@ class UsersService {
                 val newIndex = oldIndex + moveBy
                 if (newIndex < 0 || newIndex >= students.size) return
                 students = ArrayList(students)
-                Collections.swap(students, oldIndex, newIndex)
+                Collections.swap(data, oldIndex, newIndex)
             }
         }
         notifyChanges()
